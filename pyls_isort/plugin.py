@@ -1,29 +1,47 @@
 import os
 
-from isort import SortImports
+try:
+    # isort<5
+    from isort import SortImports
+
+    def isort_sort(source, settings_path):
+        return SortImports(
+            file_contents=source,
+            settings_path=settings_path,
+        ).output
+
+except ImportError:
+    # isort=>5
+    from isort import code
+    from isort.settings import Config
+
+    def isort_sort(source, settings_path):
+        return code(source, config=Config(settings_path=settings_path))
+
+
 from pyls import hookimpl
 
 
 def sort(document, override=None):
     source = override or document.source
-    sorted_source = SortImports(
-        file_contents=source,
-        settings_path=os.path.dirname(os.path.abspath(document.path))
-    ).output
+    sorted_source = isort_sort(
+        source,
+        os.path.dirname(os.path.abspath(document.path)),
+    )
     if source == sorted_source:
         return
     return [{
         'range': {
             'start': {
                 'line': 0,
-                'character': 0
+                'character': 0,
             },
             'end': {
                 'line': len(document.lines),
-                'character': 0
-            }
+                'character': 0,
+            },
         },
-        'newText': sorted_source
+        'newText': sorted_source,
     }]
 
 

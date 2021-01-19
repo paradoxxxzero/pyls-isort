@@ -12,11 +12,15 @@ try:
 
 except ImportError:
     # isort=>5
-    from isort import code
+    from isort import code, exceptions
     from isort.settings import Config
 
     def isort_sort(source, settings_path):
-        return code(source, config=Config(settings_path=settings_path))
+        try:
+            source = code(source, config=Config(settings_path=settings_path))
+        except exceptions.FileSkipComment:
+            pass
+        return source
 
 
 from pyls import hookimpl

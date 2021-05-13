@@ -19,7 +19,7 @@ except ImportError:
         return code(source, config=Config(settings_path=settings_path))
 
 
-from pyls import hookimpl
+from pylsp import hookimpl
 
 
 def sort(document, override=None):
@@ -46,7 +46,7 @@ def sort(document, override=None):
 
 
 @hookimpl(hookwrapper=True)
-def pyls_format_document(document):
+def pylsp_format_document(document):
     outcome = yield
     results = outcome.get_result()
     if results:
@@ -59,7 +59,7 @@ def pyls_format_document(document):
 
 
 @hookimpl(hookwrapper=True)
-def pyls_format_range(document, range):
+def pylsp_format_range(document, range):
     outcome = yield
     results = outcome.get_result()
     if results:

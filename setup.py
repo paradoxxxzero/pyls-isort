@@ -23,6 +23,6 @@ setup(
     provides=['pyls_isort'],
     install_requires=['python-language-server', 'isort'],
     entry_points={
-        'pyls': ['pyls_isort = pyls_isort.plugin'],
+        'pylsp': ['pyls_isort = pyls_isort.plugin'],
     },
 )
